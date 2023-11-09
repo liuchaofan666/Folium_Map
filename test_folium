@@ -1,0 +1,153 @@
+'''
+1、location地图中心点 经纬度，list 或者 tuple 格式，顺序为 latitude(纬度), longitude(经度)
+
+2、zoom_start地图等级 缩放值，默认为 10，值越大比例尺越小，地图放大级别越大
+
+3、tiles 显示样式，默认*‘OpenStreetMap’*，也就是开启街道显示；也有一些其他的内建地图样式，如’Stamen Terrain’、‘Stamen Toner’、‘Mapbox Bright’、'Mapbox Control Room’等；也可以传入’None’来绘制一个没有风格的朴素地图，或传入一个URL来使用其它的自选osm
+
+4、crs 地理坐标参考系统，默认为"EPSG3857"
+
+5、width：int型或str型，int型时，传入的是地图宽度的像素值；str型时，传入的是地图宽度的百分比，形式为’xx%‘。默认为’100%’
+
+6、height：控制地图的高度，格式同width
+
+7、max_zoom：int型，控制地图可以放大程度的上限，默认为18
+
+8、attr：str型，当在tiles中使用自选URL内的osm时使用，用于给自选osm命名
+
+9、control_scale：bool型，控制是否在地图上添加比例尺，默认为False即不添加
+
+10、no_touch：bool型，控制地图是否禁止接受来自设备的触控事件譬如拖拽等，默认为False，即不禁止
+
+folium.Marker参数介绍
+
+1、location：同folium.Map()中的同名参数，用于确定标记部件的经纬位置
+
+2、popup：str型或folium.Popup()对象输入，用于控制标记部件的具体样式（folium内部自建了许多样式），默认为None，即不显示部件
+
+3、icon：folium.Icon()对象，用于设置popup定义的部件的具体颜色、图标内容等
+'''
+
+#导入所需库
+import folium 
+import pandas as pd
+import xlwings as xw
+from folium.plugins import MarkerCluster
+from folium import FeatureGroup,LayerControl
+
+# 聚合地图
+# 创建地图
+# m = folium.Map(location=[30.371458, 114.40628], zoom_start=10,
+#                tiles='http://rt1.map.gtimg.com/realtimerender?z={z}&x={x}&y={-y}&type=vector&style=6',attr='default') 
+# #读取经纬度数据
+# data = pd.read_excel(r'z:\Python绘制地图\湖北省充电桩数据-20231023.xlsx')
+# flag = True
+# # 是否使用聚合
+# if flag:
+#     marker_cluster = MarkerCluster().add_to(m)
+#     # for循环添加标记点
+#     for i in range(len(data)):
+#         folium.Marker(location=[data.loc[i, '纬度'], data.loc[i, '经度']],  
+#                                             # 坐标用[纬度，经度]
+#                                             popup=folium.Popup(str(data.loc[i, '充电桩名称']),parse_html=True,tooltip=str(data.loc[i, '充电桩名称']),max_width=100), 
+#                                             # 提示语横向完全显示
+#                                             icon=folium.Icon(color='red')).add_to(marker_cluster)       
+# else:
+#     # for循环添加标记点
+#     for i in range(len(data)):
+#         folium.Marker(location=[data.loc[i, '纬度'], data.loc[i, '经度']],  
+#                                               # 坐标用[纬度，经度]
+#                                               popup=folium.Popup(str(data.loc[i, '充电桩名称']),parse_html=True,tooltip=str(data.loc[i, '充电桩名称']),max_width=100),  
+#                                               # 提示语横向完全显示
+#                                               icon=folium.Icon(color='red'),).add_to(m)
+# # 为地图对象添加点击显示经纬度的子功能
+# m.add_child(folium.LatLngPopup())
+# # 点击新增
+# m.add_child(folium.ClickForMarker())
+# m.save(r'z:\Python绘制地图\map湖北20231025.html')
+
+
+
+
+# 普通地图
+# latitudes = list(data['纬度'])
+# longitudes = list(data['经度'])
+
+# #将数据点添加到地图上
+# for lat, lon in zip(latitudes, longitudes):
+#     folium.Marker(location=[lat, lon]).add_to(m)
+# #保存地图为HTML文件
+# m.save(r'z:\Python绘制地图\map广州.html')
+
+
+
+
+# 分组筛选聚合地图
+# tile = 'http://rt1.map.gtimg.com/realtimerender?z={z}&x={x}&y={-y}&type=vector&style=0'
+# tile='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=7'
+# #读取经纬度数据
+# data = pd.read_excel(r'z:\Python绘制地图\湖北省充电桩数据-20231023.xlsx')
+# distriction = data['区县'].drop_duplicates()
+# m = folium.Map(location=[30.371458, 114.40628],  # 地图中心点
+#                tiles=None,control_scale=True,  # 显示比例尺
+#                zoom_start=8)  # 初始等级
+# folium.TileLayer(tiles=tile, attr='default', name='省份').add_to(m)  # 地图瓦片添加命名# 
+# #创建组
+# # create a mark cluster object
+# marker_cluster = MarkerCluster().add_to(m)
+
+# for i in distriction:
+#     folium.Marker(str(i) + ' = ' + 'FeatureGroup(name="' + str(i) + '",show=False).add_to(m)').add_to(marker_cluster)# 创建聚合
+
+# for j in distriction:
+#     # 是否将临近点聚合# 
+#     folium.Marker(str(j) + 'mc = ' + 'MarkerCluster().add_to(' + str(j) + ')').add_to(marker_cluster)
+#     folium.Marker(str(j) + 'mc = ' + str(j)).add_to(marker_cluster)
+#     # for循环添加标记点
+# for k in range(len(data)):
+#     folium.Marker('''folium.Marker(location=[data.loc[k,'纬度'], data.loc[k,'经度']],  
+#                   popup=folium.Popup(str(data.loc[k,'充电桩名称']), 
+#                                      parse_html=True, 
+#                                      max_width=150),                #提示语横向完全显示
+#                   icon=folium.Icon(color='red')      
+#                  ).add_to(''' + str(data.loc[k, '区县']) + 'mc)').add_to(marker_cluster)
+
+    
+# # LayerControl(collapsed=False).add_to(m)
+
+
+# '''为地图对象添加点击显示经纬度的子功能'''
+# m.add_child(folium.LatLngPopup())
+# m.save(r'z:\Python绘制地图\map湖北省-20231023.html')  # 保存到当前目录下
+
+
+
+
+
+
+
+
+
+
+# 热力图
+# from folium.plugins import HeatMap
+ 
+# # 加载数据
+# data = pd.read_excel(r'z:\Python绘制地图\湖北省充电桩数据-20231023.xlsx')
+ 
+# # 获取需要的数据
+# lng = data['经度']
+# lat = data['纬度']
+# heat_data = [[row['纬度'],row['经度']] for index, row in data.iterrows()]
+ 
+# # 绘制地图
+# m = folium.Map(location=[30.371458, 114.40628],
+#                zoom_start=11,
+#                tiles='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=7',
+#                attr='高德-常规图') # 初始化地图
+ 
+# # 添加热力图层
+# HeatMap(heat_data, name='热力图').add_to(m)
+ 
+# # 保存地图
+# m.save(r'z:\Python绘制地图\heatmap1.html')
